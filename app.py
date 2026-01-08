@@ -383,7 +383,8 @@ else:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: gray;'>
-    <small>1型发作性睡病临床特征预测模型 | 基于Logistic回归 | Ver.1.03 (JAN 8, 2026) | PMH 2025</small>
+    <small>1型发作性睡病临床特征预测模型 | 基于Logistic回归\nVer.1.03 (JAN 8, 2026) | PMH 2025</small>
 </div>
 """, unsafe_allow_html=True)
+
 
