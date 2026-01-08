@@ -4,6 +4,7 @@
 """
 import streamlit as st
 import numpy as np
+import matplotlib.pyplot as plt
 from model import LogisticPredictionModel
 
 # 页面配置
@@ -72,6 +73,28 @@ def segmented_choice(label, options, key, default_idx=None):
             horizontal=True
         )
     return res
+
+def render_logistic_curve(logit_value, p_value, threshold_value):
+    logit_threshold = np.log(threshold_value / (1 - threshold_value))
+    x = np.linspace(-10, 10, 400)
+    y = 1 / (1 + np.exp(-x))
+
+    try:
+        curve_box = st.container(border=True)
+    except TypeError:
+        curve_box = st.container()
+
+    with curve_box:
+        st.markdown("**Logistic curve**")
+        fig, ax = plt.subplots(figsize=(6, 3))
+        ax.plot(x, y, color="#2c7fb8", linewidth=2)
+        ax.axvline(logit_threshold, color="#7f7f7f", linestyle="--", linewidth=1.5)
+        ax.scatter([logit_value], [p_value], color="#e34a33", s=60, zorder=5)
+        ax.set_xlabel("Logit")
+        ax.set_ylabel("P")
+        ax.set_ylim(-0.02, 1.02)
+        ax.grid(alpha=0.2, linestyle="--", linewidth=0.5)
+        curve_box.pyplot(fig, clear_figure=True)
 
 # 诊断阈值（固定）
 threshold = 0.855
@@ -215,15 +238,17 @@ if input_mode == "问卷采集":
                 st.metric("Logit值", f"{result['logit']:.4f}")
             
             with col2:
-                st.metric("预测概率（P值）", f"{result['p_value']:.4f}")
+                st.metric("P值", f"{result['p_value']:.4f}")
             
             with col3:
                 diagnosis_color = "🟢" if result['diagnosis'] == "诊断" else "🔴"
                 st.metric("诊断结果", f"{diagnosis_color} {result['diagnosis']}")
+
+            render_logistic_curve(result["logit"], result["p_value"], threshold)
             
             st.info(f"""
             **结果说明：**\n
-            因1型发作性睡病为罕见疾病，本模型使用了目标特异度为99%下的诊断P值阈值（P=0.855)，以最大化控制假阳性结果；受此影响，约有20%~30%的1型发作性睡病个体会被漏诊（灵敏度为70%~80%），请结合其他临床信息综合判断。
+            因1型发作性睡病为罕见疾病，本模型使用了目标特异度为99%下的诊断P值阈值（p=0.855)，以最大化控制假阳性结果；受此影响，约有20%~30%的1型发作性睡病个体会被漏诊（灵敏度为70%~80%），请结合其他临床信息综合判断。
             """)
 
 # 简要模式
@@ -341,15 +366,17 @@ else:
                 st.metric("Logit值", f"{result['logit']:.4f}")
             
             with col2:
-                st.metric("预测概率（P值）", f"{result['p_value']:.4f}")
+                st.metric("P值", f"{result['p_value']:.4f}")
             
             with col3:
                 diagnosis_color = "🟢" if result['diagnosis'] == "诊断" else "🔴"
                 st.metric("诊断结果", f"{diagnosis_color} {result['diagnosis']}")
+
+            render_logistic_curve(result["logit"], result["p_value"], threshold)
             
             st.info(f"""
             **结果说明：**\n
-            因1型发作性睡病为罕见疾病，本模型使用了目标特异度为99%下的诊断P值阈值（P=0.855)，以最大化控制假阳性结果；受此影响，约有20%~30%的1型发作性睡病个体会被漏诊（灵敏度为70%~80%），请结合其他临床信息综合判断。
+            因1型发作性睡病为罕见疾病，本模型使用了目标特异度为99%下的诊断P值阈值（p=0.855)，以最大化控制假阳性结果；受此影响，约有20%~30%的1型发作性睡病个体会被漏诊（灵敏度为70%~80%），请结合其他临床信息综合判断。
             """)
 
 # 页脚
@@ -359,4 +386,3 @@ st.markdown("""
     <small>1型发作性睡病临床特征预测模型 | 基于Logistic回归 | PMH 2025</small>
 </div>
 """, unsafe_allow_html=True)
-
