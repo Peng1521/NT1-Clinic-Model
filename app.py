@@ -97,7 +97,7 @@ def render_logistic_curve(logit_value, p_value, threshold_value):
         curve_box.pyplot(fig, clear_figure=True)
 
 # 诊断阈值（固定）
-threshold = 0.855
+threshold = 0.2457
 st.sidebar.markdown(f" ")
 
 # 问卷模式
@@ -248,7 +248,7 @@ if input_mode == "问卷采集":
             
             st.info(f"""
             **结果说明：**\n
-            因1型发作性睡病为罕见疾病，本模型使用了目标特异度为99%下的预测概率阈值（P=0.855)，以最大化控制假阳性结果；受此影响，约有20%~30%的1型发作性睡病个体会被漏诊（灵敏度为70%~80%），请结合其他临床信息综合判断。
+            本模型灵敏度约为94%，特异度约为95%。请结合其他临床信息综合判断。
             """)
 
 # 简要模式
@@ -376,16 +376,17 @@ else:
             
             st.info(f"""
             **结果说明：**\n
-            因1型发作性睡病为罕见疾病，本模型使用了目标特异度为99%下的预测概率阈值（p=0.855)，以最大化控制假阳性结果；受此影响，约有20%~30%的1型发作性睡病个体会被漏诊（灵敏度为70%~80%），请结合其他临床信息综合判断。
+            本模型灵敏度约为94%，特异度约为95%。请结合其他临床信息综合判断。
             """)
 
 # 页脚
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: gray;'>
-    <small>1型发作性睡病临床特征预测模型 | 基于Logistic回归<br>Ver.1.03 (JAN 8, 2026) | PMH 2026</small>
+    <small>1型发作性睡病临床特征预测模型 | 基于Logistic回归<br>Ver.1.04 (FEB 2, 2026) | PMH 2026</small>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
